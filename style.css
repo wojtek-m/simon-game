@@ -1,13 +1,46 @@
-.container {
-  margin: auto;
-  margin-top: 100px;
+h1 {
   text-align: center;
-  display: inline;
-
+  font-weight: 700;
+  font-size: 3em;
+  margin: 20px 0px 20px 0px;
 }
 
-button {
+.buttons {
+  text-align: center;
+  display: flex;
+}
 
-  min-width: 100px;
-  min-height: 75px;
+.buttons button {
+  min-width: 85px;
+  margin-top: 20px;
+  margin-left: 5px;
+}
+
+.element {
+  min-height: 125px;
+  padding: 20px;
+  font-size: 4em;
+  text-align: center;
+}
+
+.feedback {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.feedback p {
+  font-size: 1.75em;
+}
+
+#element0 {
+  background-color: rgb(57, 203, 198);
+}
+#element1 {
+  background-color: rgb(85, 43, 147);
+}
+#element2 {
+  background-color: rgb(214, 208, 56);
+}
+#element3 {
+  background-color: rgb(27, 150, 51);
 }

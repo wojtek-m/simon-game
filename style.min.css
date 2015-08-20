@@ -1,1 +1,1 @@
-.container{margin:auto;margin-top:100px;text-align:center;display:inline}button{min-width:100px;min-height:75px}
+h1{text-align:center;font-weight:700;font-size:3em;margin:20px 0}.buttons{text-align:center;display:flex}.buttons button{min-width:85px;margin-top:20px;margin-left:5px}.element{min-height:125px;padding:20px;font-size:4em;text-align:center}.feedback{margin-top:20px;text-align:center}.feedback p{font-size:1.75em}#element0{background-color:#39cbc6}#element1{background-color:#552b93}#element2{background-color:#d6d038}#element3{background-color:#1b9633}

@@ -15,16 +15,16 @@ Bonus User Story: As a user, I can win the game by getting a series of 20 steps 
 */
 
 // jQuery
-$('#0').on('click', function() {
+$('#element0').on('click', function() {
   simonGame.processUserClick(0);
 });
-$('#1').on('click', function() {
+$('#element1').on('click', function() {
   simonGame.processUserClick(1);
 });
-$('#2').on('click', function() {
+$('#element2').on('click', function() {
   simonGame.processUserClick(2);
 });
-$('#3').on('click', function() {
+$('#element3').on('click', function() {
   simonGame.processUserClick(3);
 });
 $('#play').on('click', function() {
@@ -39,9 +39,16 @@ $('#new').on('click', function() {
 });
 
 
+// select view elements
+var feedback = document.getElementById('feedback');
+
+// sounds
+var sound = new Audio();
+
 // Game settings and parameters
 var SERIES_LENGTH = 20;
 var DELAY1 = 1000;
+var DELAY2 = 2000;
 var SPEED1 = 500;
 
 // Create an instance of the game
@@ -55,6 +62,7 @@ function Game () {
   this.gameSeries = [];
   this.gameStage = 1;
   this.clickStage = 0;
+  this.feedback = '';
 }
 
 /*
@@ -82,8 +90,8 @@ Game.prototype.displaySeries = function () {
   var tracker = 0;
   for (var i = this.gameStage; i > 0; i--) {
     var element = this.gameSeries[tracker];
-    var activeElement = document.getElementById('' + element  + '');
-    this.displayElement(activeElement, element, tracker);
+    //var activeElement = document.getElementById('' + element  + '');
+    this.displayElement(element, tracker);
     tracker += 1;
   }
   this.gameActive = true;
@@ -93,38 +101,41 @@ Game.prototype.displaySeries = function () {
   Handle the display and sound of the current element
   in the series
 */
-Game.prototype.displayElement = function (activeElement, element, tracker) {
+Game.prototype.displayElement = function (element, tracker) {
     setTimeout(function() {
-      activeElement.innerHTML = 'XX' + element + 'XX';
-      console.log(activeElement);
+      sound.src = 'https://s3.amazonaws.com/freecodecamp/simonSound' + (element + 1) + '.mp3';
+      sound.play();
+      var id = '#' + element;
+      $('#element' + element).effect('shake', {direction:"right", times:3, distance:1} ,50);
     }, SPEED1 * tracker);
+
 };
 
 /*
   Process user click on element and updates the state of the game.
-
 */
 Game.prototype.processUserClick = function (number) {
-  if (this.gameActive && this.clickStage === this.gameStage && this.clickStage > 1) {
-    // TODO display positive feedback cue on the screen
-    this.updateGameStage();
-    this.gameActive = false;
-    this.resetClickStage();
-  // game is active
-  } else if (this.gameActive) {
-    // user clicked the correct element
+  // animation and sound of the clicked element
+  this.displayElement(number);
+  if (this.gameActive) {
     if (this.checkUserAnswer(number)) {
       // if last element of the current stage,
       if (this.gameStage === this.clickStage + 1 ) {
+        this.feedback = 'Correct! Next round.';
+        this.updateView();
         this.updateGameStage();
         this.resetClickStage();
+        this.gameActive = false;
         game = this;
         setTimeout(function() {
             game.displaySeries();
-        }, DELAY1)
+            game.gameActive = true;
+        }, DELAY2)
       } else {
         // if not the last element update click counter
+        this.feedback = 'Correct!';
         this.updateClickStage();
+        this.updateView();
       }
       console.log('good click');
       console.log('ClickStage: ' + this.clickStage);
@@ -133,27 +144,33 @@ Game.prototype.processUserClick = function (number) {
       console.log('bad click');
       console.log('ClickStage: ' + this.clickStage);
       console.log('GameStage: ' + this.gameStage);
-      // TODO display an error
-      // reset click stage
+      this.feedback = 'Wrong, please try again.'
+      this.resetClickStage();
+      this.updateView();
     }
   } else {
     console.log('game inactive');
   }
 };
 
-// game.UpdateClickStage - increment the click stage tracker (this may
-// be better to do in jQuery on the client side and pass the stage as
-// a integer to CheckUserAnswer funtion)
+/*
+  Increment the click stage tracker
+*/
 Game.prototype.updateClickStage = function () {
   this.clickStage +=1;
 };
 
+/*
+  Reset the click stage tracker
+*/
 Game.prototype.resetClickStage = function () {
   this.clickStage = 0;
 };
 
-// game CheckUserAnswer - function called on each click to check if the
-// element clicked matches the element in the game series array
+/*
+  Check if the element clicked matches a corresponding element in
+  the game series array
+*/
 Game.prototype.checkUserAnswer = function (elementClicked) {
   if (elementClicked === this.gameSeries[this.clickStage]) {
     return true;
@@ -162,17 +179,29 @@ Game.prototype.checkUserAnswer = function (elementClicked) {
   }
 };
 
-// game.RestartGame - set and restart the game object
+/*
+  Restart the game object.
+*/
 Game.prototype.restartGame = function () {
   this.gameActive = false;
   this.gameSeries = [];
   this.gameStage = 1;
   this.clickStage = 0;
+  this.feedback = '';
   this.generateSeries();
+  this.updateView();
   console.log('restart');
 };
+
 /*
-  Generate random number between 0 and 4
+  Update the DOM
+*/
+Game.prototype.updateView = function () {
+  feedback.innerHTML = this.feedback;
+};
+
+/*
+  Generate random number between 0 and 4.
 */
 Game.prototype.generateRandomNumber = function () {
   return Math.floor(Math.random() * 3.99);
