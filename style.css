@@ -17,7 +17,7 @@ h1 {
 }
 
 .element {
-  min-height: 125px;
+  min-height: 250px;
   padding: 20px;
   font-size: 4em;
   text-align: center;
@@ -34,13 +34,41 @@ h1 {
 
 #element0 {
   background-color: rgb(57, 203, 198);
+  background-image: url('images/goat1.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  -webkit-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  -moz-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
 }
 #element1 {
   background-color: rgb(85, 43, 147);
+  background-image: url('images/crow1.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  -webkit-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  -moz-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
 }
 #element2 {
   background-color: rgb(214, 208, 56);
+  background-image: url('images/cat1.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  -webkit-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  -moz-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
 }
 #element3 {
   background-color: rgb(27, 150, 51);
+  background-image: url('images/horse1.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  -webkit-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  -moz-box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
+  box-shadow:inset 0px 0px 0px 3px rgb(58, 61, 61);
 }

@@ -103,7 +103,7 @@ Game.prototype.displaySeries = function () {
 */
 Game.prototype.displayElement = function (element, tracker) {
     setTimeout(function() {
-      sound.src = 'https://s3.amazonaws.com/freecodecamp/simonSound' + (element + 1) + '.mp3';
+      sound.src = 'sounds/animal_short' + element + '.wav';
       sound.play();
       var id = '#' + element;
       $('#element' + element).effect('shake', {direction:"right", times:3, distance:1} ,50);
