@@ -40,7 +40,8 @@ $('#new').on('click', function() {
 
 
 // select view elements
-var feedback = document.getElementById('feedback');
+var displayFeedback = document.getElementById('feedback');
+var displayStage = document.getElementById('stage');
 
 // sounds
 var sound = new Audio();
@@ -49,7 +50,11 @@ var sound = new Audio();
 var SERIES_LENGTH = 20;
 var DELAY1 = 1000;
 var DELAY2 = 2000;
-var SPEED1 = 500;
+var SPEED = 1000;
+// set the speed increase on given stages
+var SPEED_MULTIPLIER = 0.85;
+// set on which stages to increase the speed
+var speedUp = [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
 
 // Create an instance of the game
 var simonGame = new Game();
@@ -58,11 +63,14 @@ var simonGame = new Game();
   Game object
 */
 function Game () {
-  this.gameActive = false;
-  this.gameSeries = [];
-  this.gameStage = 1;
-  this.clickStage = 0;
-  this.feedback = '';
+  var gameActive; // track if game is active
+  var gameSeries = []; // array with the game sequence
+  var gameStage; // track stage of the game (round)
+  var clickStage;  // track user clicks on a given guess round
+  var feedback; // string with feedback for user displayed in the view
+  var speedIncrease; // track the current speed increase
+  var speedModeActive; // track if speed mode is active
+  var hardcoreModeActive; // track if hardcore mode is active (reset the game after a single mistake)
 }
 
 /*
@@ -71,7 +79,7 @@ function Game () {
 */
 Game.prototype.generateSeries = function () {
   for (var i = SERIES_LENGTH; i > 0; i--) {
-    this.gameSeries.push(this.generateRandomNumber());
+    gameSeries.push(this.generateRandomNumber());
   }
 };
 
@@ -79,7 +87,7 @@ Game.prototype.generateSeries = function () {
   Increment the gameStage
 */
 Game.prototype.updateGameStage = function () {
-  this.gameStage += 1;
+  gameStage += 1;
 };
 
 
@@ -88,13 +96,18 @@ Game.prototype.updateGameStage = function () {
 */
 Game.prototype.displaySeries = function () {
   var tracker = 0;
-  for (var i = this.gameStage; i > 0; i--) {
-    var element = this.gameSeries[tracker];
-    //var activeElement = document.getElementById('' + element  + '');
+  gameActive = false;
+  feedback = 'Displaying round ' + gameStage;
+  this.updateView();
+  for (var i = gameStage; i > 0; i--) {
+    var element = gameSeries[tracker];
     this.displayElement(element, tracker);
     tracker += 1;
   }
-  this.gameActive = true;
+  // make the game active after series display is finished
+  setTimeout(function() {
+    gameActive = true;
+  }, SPEED * speedIncrease * tracker);
 }
 
 /*
@@ -104,11 +117,11 @@ Game.prototype.displaySeries = function () {
 Game.prototype.displayElement = function (element, tracker) {
     setTimeout(function() {
       sound.src = 'sounds/animal_short' + element + '.wav';
+      sound.volume = .3;
       sound.play();
       var id = '#' + element;
       $('#element' + element).effect('shake', {direction:"right", times:3, distance:1} ,50);
-    }, SPEED1 * tracker);
-
+    }, SPEED * speedIncrease * tracker);
 };
 
 /*
@@ -116,40 +129,56 @@ Game.prototype.displayElement = function (element, tracker) {
 */
 Game.prototype.processUserClick = function (number) {
   // animation and sound of the clicked element
-  this.displayElement(number);
-  if (this.gameActive) {
+  if (gameActive) {
+    this.displayElement(number);
     if (this.checkUserAnswer(number)) {
+      // increase the speed
+      if (speedModeActive && speedUp[gameStage]) {
+        this.increaseSpeed(SPEED_MULTIPLIER);
+      }
       // if last element of the current stage,
-      if (this.gameStage === this.clickStage + 1 ) {
-        this.feedback = 'Correct! Next round.';
-        this.updateView();
-        this.updateGameStage();
-        this.resetClickStage();
-        this.gameActive = false;
-        game = this;
-        setTimeout(function() {
-            game.displaySeries();
-            game.gameActive = true;
-        }, DELAY2)
+      if (gameStage === clickStage + 1 ) {
+        if (gameStage === SERIES_LENGTH) {
+          feedback = 'You have WON, congratulations!';
+          this.updateView();
+        } else {
+          feedback = 'Correct! Next round.';
+          this.updateGameStage();
+          this.resetClickStage();
+          this.updateView();
+          gameActive = false;
+          game = this;
+          setTimeout(function() {
+              game.displaySeries();
+              game.gameActive = true;
+          }, DELAY2)
+        }
       } else {
         // if not the last element update click counter
-        this.feedback = 'Correct!';
+        feedback = 'Good so far, keep going.';
         this.updateClickStage();
         this.updateView();
       }
-      console.log('good click');
-      console.log('ClickStage: ' + this.clickStage);
-      console.log('GameStage: ' + this.gameStage);
     } else {
-      console.log('bad click');
-      console.log('ClickStage: ' + this.clickStage);
-      console.log('GameStage: ' + this.gameStage);
-      this.feedback = 'Wrong, please try again.'
-      this.resetClickStage();
-      this.updateView();
+      // hardcore mode mistake (game over)
+      if (hardcoreModeActive) {
+        this.restartGame();
+        feedback = 'Wrong, GAME OVER! You can start a new game.'
+        this.updateView();
+      // normal mode mistake (reset clicks and display current round again)
+      } else {
+        feedback = 'Wrong, please try again.'
+        this.resetClickStage();
+        this.updateView();
+        game = this;
+        // display series again with a delay
+        gameActive = false;
+        setTimeout(function() {
+            game.displaySeries();
+            game.gameActive = true;
+        }, DELAY2);
+      }
     }
-  } else {
-    console.log('game inactive');
   }
 };
 
@@ -157,14 +186,14 @@ Game.prototype.processUserClick = function (number) {
   Increment the click stage tracker
 */
 Game.prototype.updateClickStage = function () {
-  this.clickStage +=1;
+  clickStage +=1;
 };
 
 /*
   Reset the click stage tracker
 */
 Game.prototype.resetClickStage = function () {
-  this.clickStage = 0;
+  clickStage = 0;
 };
 
 /*
@@ -172,7 +201,7 @@ Game.prototype.resetClickStage = function () {
   the game series array
 */
 Game.prototype.checkUserAnswer = function (elementClicked) {
-  if (elementClicked === this.gameSeries[this.clickStage]) {
+  if (elementClicked === gameSeries[clickStage]) {
     return true;
   } else {
     return false;
@@ -183,21 +212,24 @@ Game.prototype.checkUserAnswer = function (elementClicked) {
   Restart the game object.
 */
 Game.prototype.restartGame = function () {
-  this.gameActive = false;
-  this.gameSeries = [];
-  this.gameStage = 1;
-  this.clickStage = 0;
-  this.feedback = '';
+  gameActive = false;
+  gameSeries = [];
+  gameStage = 1;
+  clickStage = 0;
+  feedback = '';
+  speedIncrease = 1;
+  speedModeActive = false;
+  hardcoreModeActive = false;
   this.generateSeries();
   this.updateView();
-  console.log('restart');
 };
 
 /*
   Update the DOM
 */
 Game.prototype.updateView = function () {
-  feedback.innerHTML = this.feedback;
+  displayFeedback.innerHTML = feedback;
+  displayStage.innerHTML = gameStage;
 };
 
 /*
@@ -207,4 +239,36 @@ Game.prototype.generateRandomNumber = function () {
   return Math.floor(Math.random() * 3.99);
 };
 
-// game.ChangeSpeed - increases the speed of the game on certain stages
+/*
+  Increase the speed of the game by a given multiplier
+*/
+Game.prototype.increaseSpeed = function (multiplier) {
+  speedIncrease = multiplier;
+};
+
+/*
+  Toggle the hardcore mode
+*/
+Game.prototype.toggleHardcoreMode = function (toggle) {
+  if (toggle === 1) {
+    hardcoreModeActive = true;
+  } else {
+    hardcoreModeActive = false;
+  }
+};
+
+/*
+  Toggle the speed up mode
+*/
+Game.prototype.toggleSpeedMode = function (toggle) {
+  if (toggle === 1) {
+    speedModeActive = true;
+  } else {
+    speedModeActive = false;
+  }
+};
+
+// display speed (for debugging)
+Game.prototype.displaySpeed = function () {
+  console.log(speedIncrease);
+};
