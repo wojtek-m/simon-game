@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="container-fluid">
-    <div class="col-xs-6 col-xs-offset-3"><h1>Simon Game</h1></div>
+    <div class="col-xs-12 title"><h3>Simon Game</h3></div>
     <!-- Game elements -->
     <div class="row">
       <div id="element0" class="element col-xs-5 col-xs-offset-1"  ><p></p></div>
@@ -18,22 +18,28 @@
     </div>
     <!-- Feedback and information -->
     <div class="row">
-      <div class="col-xs-6 col-xs-offset-3 col-md-2 col-md-offset-1">
+      <div class="col-xs-12 col-sm-12 col-sm-offset-0 col-md-3 col-md-offset-1 col-lg-2 col-lg-offset-0 rounds">
         <h2 >Round: <span id='stage'><strong>0</strong></span></h2>
       </div>
-      <div class="col-xs-12 col-md-6 col-md-offset-0 feedback">
+      <div class="col-xs-10 col-xs-offset-2 col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-0 col-lg-4 buttons">
+        <div>
+          <button id="play" class="btn btn-success">Play</button>
+          <button id="new" class="btn btn-info">New Game</button>
+          <button id="reset" class="btn btn-danger">Reset</button>
+        </div>
+      </div>
+      <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-0 col-md-4 col-md-offset-0 col-lg-3 col-lg-offset-0">
+        <div class="col-xs-5 col-xs-offset-1 col-sm-4 col-md-4 col-lg-6 col-lg-offset-0">
+          <div class="toggle-light" id="speed-toggle"></div>
+          <div class="toggle-info"><p>Speed mode</p></div>
+        </div>
+        <div class="col-xs-5 col-sm-4 col-md-4 col-lg-6">
+          <div class="toggle-light" id="hard-toggle"></div>
+          <div class="toggle-info"><p>Hard mode</p></div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-lg-3 feedback">
         <h3 id='feedback'>Click 'New Game' to Start.</h3>
-      </div>
-      <div class="col-xs-6 col-xs-offset-3 col-md-3 col-md-offset-0">
-        <h2></h2>
-      </div>
-    </div>
-    <!-- Buttons -->
-    <div class="row buttons">
-      <div class="col-xs-6 col-xs-offset-3">
-        <button id="play" class="btn btn-success">Play</button>
-        <button id="new" class="btn btn-info">New Game</button>
-        <button id="reset" class="btn btn-danger">Reset</button>
       </div>
     </div>
   </div>
@@ -42,5 +48,6 @@
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="toggles/toggles.min.js"></script>
 <script src="game.js"></script>
 </html>

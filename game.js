@@ -38,6 +38,44 @@ $('#new').on('click', function() {
   simonGame.displaySeries();
 });
 
+// Speed mode slider
+$('#speed-toggle').toggles({
+  width: 40,
+  height: 35,
+  text: {
+    on: 'ACTIVE',
+    off: 'OFF'
+  }
+});
+
+// Toggle the speed mode (1 is on, 0 is off)
+$('#speed-toggle').on('toggle', function (e, active) {
+  if (active) {
+    simonGame.toggleSpeedMode(1);
+  } else {
+    simonGame.toggleSpeedMode(0);
+  }
+});
+
+// Hard mode slider
+$('#hard-toggle').toggles({
+  width: 40,
+  height: 35,
+  text: {
+    on: 'ACTIVE',
+    off: 'OFF'
+  }
+});
+
+// Toggle the hard mode (1 is on, 0 is off)
+$('#hard-toggle').on('toggle', function (e, active) {
+  if (active) {
+    simonGame.toggleHardcoreMode(1);
+  } else {
+    simonGame.toggleHardcoreMode(0);
+  }
+});
+
 
 // select view elements
 var displayFeedback = document.getElementById('feedback');
@@ -69,8 +107,8 @@ function Game () {
   var clickStage;  // track user clicks on a given guess round
   var feedback; // string with feedback for user displayed in the view
   var speedIncrease; // track the current speed increase
-  var speedModeActive; // track if speed mode is active
-  var hardcoreModeActive; // track if hardcore mode is active (reset the game after a single mistake)
+  var speedModeActive = false; // track if speed mode is active
+  var hardcoreModeActive = false; // track if hardcore mode is active (reset the game after a single mistake)
 }
 
 /*
@@ -218,8 +256,11 @@ Game.prototype.restartGame = function () {
   clickStage = 0;
   feedback = '';
   speedIncrease = 1;
-  speedModeActive = false;
-  hardcoreModeActive = false;
+  // Wire up the sliders with settings
+  var speedToggle = $('#speed-toggle').data('toggles');
+  speedModeActive = speedToggle.active;
+  var hardToggle = $('#hard-toggle').data('toggles');
+  hardcoreModeActive = hardToggle.active;
   this.generateSeries();
   this.updateView();
 };
@@ -268,7 +309,11 @@ Game.prototype.toggleSpeedMode = function (toggle) {
   }
 };
 
-// display speed (for debugging)
-Game.prototype.displaySpeed = function () {
-  console.log(speedIncrease);
+// display modes (for debugging)
+Game.prototype.displaySpeedMode = function () {
+  console.log(speedModeActive);
+};
+
+Game.prototype.displayHardMode = function () {
+  console.log(hardcoreModeActive);
 };
