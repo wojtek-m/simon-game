@@ -19,27 +19,31 @@
     <!-- Feedback and information -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-sm-offset-0 col-md-3 col-md-offset-1 col-lg-2 col-lg-offset-0 rounds">
-        <h2 >Round: <span id='stage'><strong>0</strong></span></h2>
+        <p class="rounds">Round: <span id='stage'><strong>0</strong></span></p>
       </div>
-      <div class="col-xs-10 col-xs-offset-2 col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-0 col-lg-4 buttons">
+      <div class="col-xs-11 col-xs-offset-1 col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-0 col-lg-4 buttons">
         <div>
           <button id="play" class="btn btn-success">Play</button>
           <button id="new" class="btn btn-info">New Game</button>
           <button id="reset" class="btn btn-danger">Reset</button>
         </div>
       </div>
-      <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-0 col-md-4 col-md-offset-0 col-lg-3 col-lg-offset-0">
-        <div class="col-xs-5 col-xs-offset-1 col-sm-4 col-md-4 col-lg-6 col-lg-offset-0">
-          <div class="toggle-light" id="speed-toggle"></div>
-          <div class="toggle-info"><p>Speed mode</p></div>
+      <div class="col-xs-11 col-xs-offset-1 col-sm-6 col-sm-offset-0 col-md-4 col-md-offset-0 col-lg-3 col-lg-offset-0">
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-6 col-lg-offset-0 toggle-container">
+          <div class="wrap-toggle">
+            <div class="toggle-light" id="speed-toggle"></div>
+            <div class="toggle-info"><p>Speed mode</p></div>
+          </div>
         </div>
-        <div class="col-xs-5 col-sm-4 col-md-4 col-lg-6">
-          <div class="toggle-light" id="hard-toggle"></div>
-          <div class="toggle-info"><p>Hard mode</p></div>
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-6 toggle-container">
+          <div class="wrap-toggle">
+            <div class="toggle-light" id="hard-toggle"></div>
+            <div class="toggle-info"><p>Hard mode</p></div>
+          </div>
         </div>
       </div>
       <div class="col-xs-12 col-lg-3 feedback">
-        <h3 id='feedback'>Click 'New Game' to Start.</h3>
+        <p id='feedback'>Click 'New Game' to Start.</p>
       </div>
     </div>
   </div>

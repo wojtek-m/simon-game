@@ -43,7 +43,7 @@ $('#speed-toggle').toggles({
   width: 40,
   height: 35,
   text: {
-    on: 'ACTIVE',
+    on: 'ON',
     off: 'OFF'
   }
 });
@@ -62,7 +62,7 @@ $('#hard-toggle').toggles({
   width: 40,
   height: 35,
   text: {
-    on: 'ACTIVE',
+    on: 'ON',
     off: 'OFF'
   }
 });
@@ -93,6 +93,15 @@ var SPEED = 1000;
 var SPEED_MULTIPLIER = 0.85;
 // set on which stages to increase the speed
 var speedUp = [0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+// text settings and feedback of the UI
+var textFeedback = {
+  correct: 'Good so far, keep going.',
+  gameOver: 'Wrong, GAME OVER! You can start a new game.',
+  nextRound: 'Correct! Next round.',
+  round: 'Displaying round: ',
+  win: 'You have WON, congratulations!',
+  wrong: 'Wrong, please try again.'
+}
 
 // Create an instance of the game
 var simonGame = new Game();
@@ -135,7 +144,7 @@ Game.prototype.updateGameStage = function () {
 Game.prototype.displaySeries = function () {
   var tracker = 0;
   gameActive = false;
-  feedback = 'Displaying round ' + gameStage;
+  feedback = textFeedback.round + gameStage;
   this.updateView();
   for (var i = gameStage; i > 0; i--) {
     var element = gameSeries[tracker];
@@ -154,7 +163,7 @@ Game.prototype.displaySeries = function () {
 */
 Game.prototype.displayElement = function (element, tracker) {
     setTimeout(function() {
-      sound.src = 'sounds/animal_short' + element + '.wav';
+      sound.src = 'http://wojtekmurawski.me/memo/sounds/animal_short' + element + '.wav';
       sound.volume = .3;
       sound.play();
       var id = '#' + element;
@@ -177,10 +186,10 @@ Game.prototype.processUserClick = function (number) {
       // if last element of the current stage,
       if (gameStage === clickStage + 1 ) {
         if (gameStage === SERIES_LENGTH) {
-          feedback = 'You have WON, congratulations!';
+          feedback = textFeedback.win;
           this.updateView();
         } else {
-          feedback = 'Correct! Next round.';
+          feedback = textFeedback.nextRound;
           this.updateGameStage();
           this.resetClickStage();
           this.updateView();
@@ -193,7 +202,7 @@ Game.prototype.processUserClick = function (number) {
         }
       } else {
         // if not the last element update click counter
-        feedback = 'Good so far, keep going.';
+        feedback = textFeedback.correct;
         this.updateClickStage();
         this.updateView();
       }
@@ -201,11 +210,11 @@ Game.prototype.processUserClick = function (number) {
       // hardcore mode mistake (game over)
       if (hardcoreModeActive) {
         this.restartGame();
-        feedback = 'Wrong, GAME OVER! You can start a new game.'
+        feedback = textFeedback.gameOver
         this.updateView();
       // normal mode mistake (reset clicks and display current round again)
       } else {
-        feedback = 'Wrong, please try again.'
+        feedback = textFeedback.wrong
         this.resetClickStage();
         this.updateView();
         game = this;
@@ -270,7 +279,7 @@ Game.prototype.restartGame = function () {
 */
 Game.prototype.updateView = function () {
   displayFeedback.innerHTML = feedback;
-  displayStage.innerHTML = gameStage;
+  displayStage.innerHTML = '<strong>' + gameStage + '</strong>';
 };
 
 /*
