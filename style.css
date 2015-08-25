@@ -44,6 +44,15 @@ h3 {
   font-size: 1.5em;
 }
 
+.info {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.info .btn {
+  background-color: rgb(191, 191, 191);
+}
+
 .rounds {
   margin-top: 15px;
   text-align: center;
@@ -90,9 +99,25 @@ h3 {
   background-size: 100%;
 }
 
+#info-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 3%;
+  width: 75%;
+  height: 85%;
+  overflow: auto;
+  z-index: 22000;
+  background-color: rgb(226, 223, 232);
+  margin: auto;
+  display: none;
+}
+
 /* Media queries */
 
-@media (max-width: 768px, min-width: 500px) {
+@media (max-width: 768px) {
   .toggle-container {
     max-width: 150px;
   }

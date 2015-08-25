@@ -38,6 +38,13 @@ $('#new').on('click', function() {
   simonGame.displaySeries();
 });
 
+$('#info-btn').on('click', function() {
+  $('#info-panel').toggle();
+});
+$('#info-panel').on('click', function() {
+  $('#info-panel').toggle();
+});
+
 // Speed mode slider
 $('#speed-toggle').toggles({
   width: 40,
@@ -116,8 +123,8 @@ function Game () {
   var clickStage;  // track user clicks on a given guess round
   var feedback; // string with feedback for user displayed in the view
   var speedIncrease; // track the current speed increase
-  var speedModeActive = false; // track if speed mode is active
-  var hardcoreModeActive = false; // track if hardcore mode is active (reset the game after a single mistake)
+  var speedModeActive; // track if speed mode is active
+  var hardcoreModeActive; // track if hardcore mode is active (reset the game after a single mistake)
 }
 
 /*
